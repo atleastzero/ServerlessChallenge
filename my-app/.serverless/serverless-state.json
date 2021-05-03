@@ -23,7 +23,7 @@
           "Resource": [
             {
               "Fn::GetAtt": [
-                "UsersDynamoDBTable",
+                "CharactersDynamoDBTable",
                 "Arn"
               ]
             }
@@ -31,7 +31,7 @@
         }
       ],
       "environment": {
-        "USERS_TABLE": "users-table-dev"
+        "CHARACTERS_TABLE": "characters-table-dev"
       },
       "variableSyntax": "\\${([^{}:]+?(?:\\(|:)(?:[^:{}][^{}]*?)?)}",
       "versionFunctions": true,
@@ -108,10 +108,28 @@
               }
             }
           },
-          "AppLogGroup": {
+          "LandingLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/my-express-application-dev-app"
+              "LogGroupName": "/aws/lambda/my-express-application-dev-landing"
+            }
+          },
+          "GetCharactersLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/my-express-application-dev-getCharacters"
+            }
+          },
+          "GetCharacterLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/my-express-application-dev-getCharacter"
+            }
+          },
+          "CreateCharacterLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/my-express-application-dev-createCharacter"
             }
           },
           "IamRoleLambdaExecution": {
@@ -194,23 +212,23 @@
               }
             }
           },
-          "AppLambdaFunction": {
+          "LandingLambdaFunction": {
             "Type": "AWS::Lambda::Function",
             "Properties": {
               "Code": {
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/my-express-application/dev/1619751540040-2021-04-30T02:59:00.040Z/my-express-application.zip"
+                "S3Key": "serverless/my-express-application/dev/1620075628091-2021-05-03T21:00:28.091Z/my-express-application.zip"
               },
               "Handler": "index.handler",
               "Runtime": "nodejs12.x",
-              "FunctionName": "my-express-application-dev-app",
+              "FunctionName": "my-express-application-dev-landing",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "USERS_TABLE": "users-table-dev"
+                  "CHARACTERS_TABLE": "characters-table-dev"
                 }
               },
               "Role": {
@@ -221,17 +239,137 @@
               }
             },
             "DependsOn": [
-              "AppLogGroup"
+              "LandingLogGroup"
             ]
           },
-          "AppLambdaVersionTMciQIPF7DA4LSr4y5RLlRji5i9IDKSrN8CjS3FSCQ": {
+          "GetCharactersLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/my-express-application/dev/1620075628091-2021-05-03T21:00:28.091Z/my-express-application.zip"
+              },
+              "Handler": "index.handler",
+              "Runtime": "nodejs12.x",
+              "FunctionName": "my-express-application-dev-getCharacters",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "CHARACTERS_TABLE": "characters-table-dev"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "GetCharactersLogGroup"
+            ]
+          },
+          "GetCharacterLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/my-express-application/dev/1620075628091-2021-05-03T21:00:28.091Z/my-express-application.zip"
+              },
+              "Handler": "index.handler",
+              "Runtime": "nodejs12.x",
+              "FunctionName": "my-express-application-dev-getCharacter",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "CHARACTERS_TABLE": "characters-table-dev"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "GetCharacterLogGroup"
+            ]
+          },
+          "CreateCharacterLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/my-express-application/dev/1620075628091-2021-05-03T21:00:28.091Z/my-express-application.zip"
+              },
+              "Handler": "index.handler",
+              "Runtime": "nodejs12.x",
+              "FunctionName": "my-express-application-dev-createCharacter",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "CHARACTERS_TABLE": "characters-table-dev"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "CreateCharacterLogGroup"
+            ]
+          },
+          "GetCharactersLambdaVersion05QwfNc382DGDknzZbIKyZDgsfa0gIOoggEyfteCio": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
-                "Ref": "AppLambdaFunction"
+                "Ref": "GetCharactersLambdaFunction"
               },
-              "CodeSha256": "4KByukzrdsMLlI+AdA3tREQtPiKNxDPZnDU9laFvdqM="
+              "CodeSha256": "RLU7oVuMjr7rcEKemsgHYINvSY83zqc3ETVd4kFHf80="
+            }
+          },
+          "GetCharacterLambdaVersionTuKKvgzcTIGTLyhztSy2GIxGu9JPsnCDRD17KgRMQ8": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetCharacterLambdaFunction"
+              },
+              "CodeSha256": "RLU7oVuMjr7rcEKemsgHYINvSY83zqc3ETVd4kFHf80="
+            }
+          },
+          "LandingLambdaVersionXdGxi1eDJbpFB5M458k9U9ahnl5gnlQE7Rr3b9coOw": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "LandingLambdaFunction"
+              },
+              "CodeSha256": "RLU7oVuMjr7rcEKemsgHYINvSY83zqc3ETVd4kFHf80="
+            }
+          },
+          "CreateCharacterLambdaVersionNS29ak0gh8Yc6CqunkZZz8q2ohWy5nquuDNl23qpk": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "CreateCharacterLambdaFunction"
+              },
+              "CodeSha256": "RLU7oVuMjr7rcEKemsgHYINvSY83zqc3ETVd4kFHf80="
             }
           },
           "ApiGatewayRestApi": {
@@ -246,7 +384,7 @@
               "Policy": ""
             }
           },
-          "ApiGatewayResourceProxyVar": {
+          "ApiGatewayResourceCharacters": {
             "Type": "AWS::ApiGateway::Resource",
             "Properties": {
               "ParentId": {
@@ -255,16 +393,28 @@
                   "RootResourceId"
                 ]
               },
+              "PathPart": "characters",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceCharactersProxyVar": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Ref": "ApiGatewayResourceCharacters"
+              },
               "PathPart": "{proxy+}",
               "RestApiId": {
                 "Ref": "ApiGatewayRestApi"
               }
             }
           },
-          "ApiGatewayMethodAny": {
+          "ApiGatewayMethodGet": {
             "Type": "AWS::ApiGateway::Method",
             "Properties": {
-              "HttpMethod": "ANY",
+              "HttpMethod": "GET",
               "RequestParameters": {},
               "ResourceId": {
                 "Fn::GetAtt": [
@@ -295,7 +445,7 @@
                       ":lambda:path/2015-03-31/functions/",
                       {
                         "Fn::GetAtt": [
-                          "AppLambdaFunction",
+                          "LandingLambdaFunction",
                           "Arn"
                         ]
                       },
@@ -307,13 +457,13 @@
               "MethodResponses": []
             }
           },
-          "ApiGatewayMethodProxyVarAny": {
+          "ApiGatewayMethodCharactersGet": {
             "Type": "AWS::ApiGateway::Method",
             "Properties": {
-              "HttpMethod": "ANY",
+              "HttpMethod": "GET",
               "RequestParameters": {},
               "ResourceId": {
-                "Ref": "ApiGatewayResourceProxyVar"
+                "Ref": "ApiGatewayResourceCharacters"
               },
               "RestApiId": {
                 "Ref": "ApiGatewayRestApi"
@@ -338,7 +488,7 @@
                       ":lambda:path/2015-03-31/functions/",
                       {
                         "Fn::GetAtt": [
-                          "AppLambdaFunction",
+                          "GetCharactersLambdaFunction",
                           "Arn"
                         ]
                       },
@@ -350,7 +500,93 @@
               "MethodResponses": []
             }
           },
-          "ApiGatewayDeployment1619751538399": {
+          "ApiGatewayMethodCharactersProxyVarGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceCharactersProxyVar"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "GetCharacterLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            }
+          },
+          "ApiGatewayMethodCharactersPost": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "POST",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceCharacters"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "CreateCharacterLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            }
+          },
+          "ApiGatewayDeployment1620075623325": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -359,16 +595,18 @@
               "StageName": "dev"
             },
             "DependsOn": [
-              "ApiGatewayMethodAny",
-              "ApiGatewayMethodProxyVarAny"
+              "ApiGatewayMethodGet",
+              "ApiGatewayMethodCharactersGet",
+              "ApiGatewayMethodCharactersProxyVarGet",
+              "ApiGatewayMethodCharactersPost"
             ]
           },
-          "AppLambdaPermissionApiGateway": {
+          "LandingLambdaPermissionApiGateway": {
             "Type": "AWS::Lambda::Permission",
             "Properties": {
               "FunctionName": {
                 "Fn::GetAtt": [
-                  "AppLambdaFunction",
+                  "LandingLambdaFunction",
                   "Arn"
                 ]
               },
@@ -400,18 +638,129 @@
               }
             }
           },
-          "UsersDynamoDBTable": {
+          "GetCharactersLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "GetCharactersLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "GetCharacterLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "GetCharacterLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "CreateCharacterLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "CreateCharacterLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "CharactersDynamoDBTable": {
             "Type": "AWS::DynamoDB::Table",
             "Properties": {
               "AttributeDefinitions": [
                 {
-                  "AttributeName": "userId",
+                  "AttributeName": "characterId",
                   "AttributeType": "S"
                 }
               ],
               "KeySchema": [
                 {
-                  "AttributeName": "userId",
+                  "AttributeName": "characterId",
                   "KeyType": "HASH"
                 }
               ],
@@ -419,7 +768,7 @@
                 "ReadCapacityUnits": 1,
                 "WriteCapacityUnits": 1
               },
-              "TableName": "users-table-dev"
+              "TableName": "characters-table-dev"
             }
           }
         },
@@ -432,13 +781,40 @@
               "Name": "sls-my-express-application-dev-ServerlessDeploymentBucketName"
             }
           },
-          "AppLambdaFunctionQualifiedArn": {
+          "GetCharactersLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "AppLambdaVersionTMciQIPF7DA4LSr4y5RLlRji5i9IDKSrN8CjS3FSCQ"
+              "Ref": "GetCharactersLambdaVersion05QwfNc382DGDknzZbIKyZDgsfa0gIOoggEyfteCio"
             },
             "Export": {
-              "Name": "sls-my-express-application-dev-AppLambdaFunctionQualifiedArn"
+              "Name": "sls-my-express-application-dev-GetCharactersLambdaFunctionQualifiedArn"
+            }
+          },
+          "GetCharacterLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetCharacterLambdaVersionTuKKvgzcTIGTLyhztSy2GIxGu9JPsnCDRD17KgRMQ8"
+            },
+            "Export": {
+              "Name": "sls-my-express-application-dev-GetCharacterLambdaFunctionQualifiedArn"
+            }
+          },
+          "LandingLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "LandingLambdaVersionXdGxi1eDJbpFB5M458k9U9ahnl5gnlQE7Rr3b9coOw"
+            },
+            "Export": {
+              "Name": "sls-my-express-application-dev-LandingLambdaFunctionQualifiedArn"
+            }
+          },
+          "CreateCharacterLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "CreateCharacterLambdaVersionNS29ak0gh8Yc6CqunkZZz8q2ohWy5nquuDNl23qpk"
+            },
+            "Export": {
+              "Name": "sls-my-express-application-dev-CreateCharacterLambdaFunctionQualifiedArn"
             }
           },
           "ServiceEndpoint": {
@@ -554,43 +930,89 @@
       "vpc": {}
     },
     "custom": {
-      "tableName": "users-table-dev"
+      "tableName": "characters-table-dev"
     },
+    "plugins": [
+      "serverless-dynamodb-local",
+      "serverless-offline"
+    ],
     "pluginsData": {},
     "functions": {
-      "app": {
+      "landing": {
         "handler": "index.handler",
         "events": [
           {
-            "http": "ANY /"
-          },
-          {
-            "http": "ANY {proxy+}"
+            "http": "GET /"
           }
         ],
-        "name": "my-express-application-dev-app",
+        "name": "my-express-application-dev-landing",
         "package": {},
         "memory": 1024,
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "AppLambdaVersionTMciQIPF7DA4LSr4y5RLlRji5i9IDKSrN8CjS3FSCQ"
+        "versionLogicalId": "LandingLambdaVersionXdGxi1eDJbpFB5M458k9U9ahnl5gnlQE7Rr3b9coOw"
+      },
+      "getCharacters": {
+        "handler": "index.handler",
+        "events": [
+          {
+            "http": "GET /characters"
+          }
+        ],
+        "name": "my-express-application-dev-getCharacters",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs12.x",
+        "vpc": {},
+        "versionLogicalId": "GetCharactersLambdaVersion05QwfNc382DGDknzZbIKyZDgsfa0gIOoggEyfteCio"
+      },
+      "getCharacter": {
+        "handler": "index.handler",
+        "events": [
+          {
+            "http": "GET /characters/{proxy+}"
+          }
+        ],
+        "name": "my-express-application-dev-getCharacter",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs12.x",
+        "vpc": {},
+        "versionLogicalId": "GetCharacterLambdaVersionTuKKvgzcTIGTLyhztSy2GIxGu9JPsnCDRD17KgRMQ8"
+      },
+      "createCharacter": {
+        "handler": "index.handler",
+        "events": [
+          {
+            "http": "POST /characters"
+          }
+        ],
+        "name": "my-express-application-dev-createCharacter",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs12.x",
+        "vpc": {},
+        "versionLogicalId": "CreateCharacterLambdaVersionNS29ak0gh8Yc6CqunkZZz8q2ohWy5nquuDNl23qpk"
       }
     },
     "resources": {
       "Resources": {
-        "UsersDynamoDBTable": {
+        "CharactersDynamoDBTable": {
           "Type": "AWS::DynamoDB::Table",
           "Properties": {
             "AttributeDefinitions": [
               {
-                "AttributeName": "userId",
+                "AttributeName": "characterId",
                 "AttributeType": "S"
               }
             ],
             "KeySchema": [
               {
-                "AttributeName": "userId",
+                "AttributeName": "characterId",
                 "KeyType": "HASH"
               }
             ],
@@ -598,7 +1020,7 @@
               "ReadCapacityUnits": 1,
               "WriteCapacityUnits": 1
             },
-            "TableName": "users-table-dev"
+            "TableName": "characters-table-dev"
           }
         }
       },
@@ -610,6 +1032,9 @@
     "initialServerlessConfig": {
       "service": {
         "$ref": "$[\"service\"][\"serviceObject\"]"
+      },
+      "plugins": {
+        "$ref": "$[\"service\"][\"plugins\"]"
       },
       "custom": {
         "$ref": "$[\"service\"][\"custom\"]"
@@ -628,7 +1053,7 @@
     "artifact": "/Users/meganobryan/Development/MakeSchool/Term4/BEW2.1/Serverless/my-app/.serverless/my-express-application.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/my-express-application/dev/1619751540040-2021-04-30T02:59:00.040Z",
+    "artifactDirectoryName": "serverless/my-express-application/dev/1620075628091-2021-05-03T21:00:28.091Z",
     "artifact": "my-express-application.zip"
   }
 }

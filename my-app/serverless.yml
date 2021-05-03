@@ -5,7 +5,7 @@ plugins:
   - serverless-offline
 
 custom:
-  tableName: 'users-table-${self:provider.stage}'
+  tableName: 'characters-table-${self:provider.stage}'
 
 provider:
   name: aws
@@ -22,36 +22,40 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource:
-       - { "Fn::GetAtt":["UsersDynamoDBTable", "Arn"]}
+       - { "Fn::GetAtt":["CharactersDynamoDBTable", "Arn"]}
   environment:
-    USERS_TABLE: ${self:custom.tableName}
+    CHARACTERS_TABLE: ${self:custom.tableName}
 
 functions:
   landing:
     handler: index.handler
     events:
       - http: 'GET /'
-  getUser:
+  getCharacters:
     handler: index.handler
     events:
-      - http: 'GET /users/{proxy+}'
-  createUser:
+      - http: 'GET /characters'
+  getCharacter:
     handler: index.handler
     events:
-      - http: 'POST /users'
+      - http: 'GET /characters/{proxy+}'
+  createCharacter:
+    handler: index.handler
+    events:
+      - http: 'POST /characters'
 
 resources:
   Resources:
-    UsersDynamoDBTable:
+    CharactersDynamoDBTable:
       Type: 'AWS::DynamoDB::Table'
       Properties:
         AttributeDefinitions:
          -
-          AttributeName: userId
+          AttributeName: characterId
           AttributeType: S
         KeySchema:
          -
-          AttributeName: userId
+          AttributeName: characterId
           KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1
